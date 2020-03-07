@@ -37,7 +37,7 @@ export default {
   data: () => ({
     drawer: null,
     links: [
-      { text: 'Home', route: '/' },
+      { text: 'New offer', route: '/' },
       { text: 'Browse offers', route: '/AllOffers' },
       { text: 'My offers', route: '/MyOffers' },
       { text: 'Settings', route: '/Settings' },
