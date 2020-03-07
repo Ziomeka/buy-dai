@@ -1,42 +1,22 @@
 <template>
   <v-app>
-    <v-navigation-drawer
-        v-model="drawer"
-          app
-        >
-    </v-navigation-drawer>
-    <v-app-bar
-      app
-      color="primary"
-      dark
-    >
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-      <v-list-item>
-        <v-list-item-content>
-          <v-list-item-title class="title">
-            Buy DAI
-          </v-list-item-title>
-          <v-list-item-subtitle>
-            buy and sell DAI with Revolut
-          </v-list-item-subtitle>
-        </v-list-item-content>
-      </v-list-item>
-
-      <v-divider></v-divider>
-    </v-app-bar>
+    <navigation />
 
     <v-content>
+      <router-view></router-view>
     </v-content>
   </v-app>
 </template>
 
+
 <script>
+import Navigation from '@/components/Navigation.vue';
 
 export default {
   name: 'App',
 
   components: {
-
+    Navigation,
   },
 
   data: () => ({
