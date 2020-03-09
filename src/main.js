@@ -18,6 +18,13 @@ Vue.prototype.$blockchain = {
   submitter: undefined,
 };
 
+portis.isLoggedIn().then(({ err, result }) => {
+  if (result == false) {
+    portis.showPortis().then(() => {
+      portis.changeNetwork('kovan')
+    })
+  }
+})
 
 new Vue({
   router,
