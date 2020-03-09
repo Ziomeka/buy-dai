@@ -6,7 +6,7 @@ import './registerServiceWorker';
 import router from './router';
 import vuetify from './plugins/vuetify';
 
-const portis = new Portis('211b48db-e8cc-4b68-82ad-bf781727ea9e', 'rinkeby');
+const portis = new Portis('ba1a2134-2bbe-441c-b856-5e8d13ebb80a', 'mainnet');
 const web3 = new Web3(portis.provider);
 
 Vue.config.productionTip = false;
