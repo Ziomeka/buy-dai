@@ -9,6 +9,8 @@
       <v-toolbar-title>
         Buy DAI
       </v-toolbar-title>
+      <v-spacer />
+      <toggle-wallet />
     </v-app-bar>
     <v-navigation-drawer
       v-model="drawer"
@@ -32,12 +34,17 @@
 </template>
 
 <script>
+import ToggleWallet from '@/components/ToggleWallet.vue';
+
 export default {
   name: 'Navigation',
+  components: {
+    ToggleWallet,
+  },
   data: () => ({
     drawer: null,
     links: [
-      { text: 'Home', route: '/' },
+      { text: 'New offer', route: '/' },
       { text: 'Browse offers', route: '/AllOffers' },
       { text: 'My offers', route: '/MyOffers' },
       { text: 'Settings', route: '/Settings' },
