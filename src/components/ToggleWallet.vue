@@ -1,5 +1,5 @@
 <template>
-  <v-btn :text="!isWalletOpen" @click="toggleWallet">
+  <v-btn :disabled="isDisabled" :text="true" @click="openWallet">
     <v-icon left>mdi-wallet</v-icon>
     <span class="hidden-xs-only">wallet</span>
   </v-btn>
@@ -9,11 +9,16 @@
 export default {
   name: 'ToggleWallet',
   data: () => ({
-    isWalletOpen: false,
+    isDisabled: true,
   }),
+  created() {
+    if (this.$blockchain && this.$blockchain.portis) {
+      this.isDisabled = false;
+    }
+  },
   methods: {
-    toggleWallet() {
-      this.isWalletOpen = !this.isWalletOpen;
+    openWallet() {
+      this.$blockchain.portis.showPortis();
     },
   },
 };
