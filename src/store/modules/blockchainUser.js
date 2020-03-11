@@ -1,24 +1,39 @@
-const state = {
+const data = {
   isDaiEnabled: false,
+  isEnablingPending: false,
 };
 
 const mutations = {
-  setDaiState(payload) {
+  setDaiState(state, payload) {
     state.isDaiEnabled = payload;
+  },
+  setPendingState(state, payload) {
+    state.isEnablingPending = payload;
   },
 };
 
 const actions = {
-  getState({ commit }) {
-    setTimeout(() => {
-      commit('setDaiState', true);
-    }, 1000);
+  getState({ commit, state }) {
+    const enableStateToSend = !state.isDaiEnabled;
+    // const mockSucess = Math.round(Math.random());
+    const mockblockChain = (success) => new Promise((resolve, reject) => {
+      setTimeout(() => {
+        if (success) {
+          resolve();
+        } else {
+          reject(new Error(['Blockchain Failed']));
+        }
+      }, 10000);
+    });
+    mockblockChain(true).then(() => {
+      commit('setDaiState', enableStateToSend);
+    });
   },
 };
 
 export default {
   namespaced: true,
-  state,
+  state: data,
   actions,
   mutations,
 };
