@@ -9,7 +9,8 @@
     <v-dialog v-model="dialog" max-width="300">
       <v-card>
         <v-card-title 
-          class="headline">
+          class="headline"
+        >
           Creating offer
         </v-card-title>
         <v-card-text>
@@ -19,15 +20,17 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn 
-            color="red darken-1" 
-            text 
-            @click="dialog = false">
+          <v-btn
+            color="red darken-1"
+            text
+            @click="dialog = false"
+          >
             Cancel
           </v-btn>
           <v-btn 
-            color="green darken-1" 
-            text>
+            color="green darken-1"
+            text
+          >
             Create
           </v-btn>
         </v-card-actions>
