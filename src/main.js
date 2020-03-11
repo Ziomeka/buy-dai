@@ -28,23 +28,13 @@ function initVue(web3instance, portisInstance) {
   }).$mount('#app');
 }
 
-// eslint-disable-next-line no-undef
-if (!ethereum) {
-  const portis = new Portis('ba1a2134-2bbe-441c-b856-5e8d13ebb80a', 'kovan', { gasRelay: true });
-  const web3 = new Web3(portis.provider);
-  portis.isLoggedIn().then(({ result }) => {
-    if (result === false) {
-      portis.showPortis().then(() => {
-        portis.changeNetwork('kovan');
-        initVue(web3, portis);
-      });
-    }
-  });
-} else {
-  const portis = undefined;
-  // eslint-disable-next-line no-undef
-  ethereum.enable().then(() => {
-    // eslint-disable-next-line no-undef
-    initVue(web3, portis);
-  });
-}
+const portis = new Portis('ba1a2134-2bbe-441c-b856-5e8d13ebb80a', 'kovan', { gasRelay: true });
+const web3 = new Web3(portis.provider);
+portis.isLoggedIn().then(({ result }) => {
+  initVue(web3, portis);
+  if (result === false) {
+    portis.showPortis().then(() => {
+      portis.changeNetwork('kovan');
+    });
+  }
+});

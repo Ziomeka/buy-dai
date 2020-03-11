@@ -6,7 +6,19 @@ const s = {
 
 const mutations = {
   setNetwork(state, payload) {
-    state.networkId = payload;
+    if (Number.isNaN(payload)) {
+      state.networkName = payload;
+    } else {
+      const networkId = parseInt(payload.toString(), 10);
+      if (networkId === 1) {
+        state.networkName = 'main';
+      } else
+      if (networkId === 42) {
+        state.networkName = 'kovan';
+      } else {
+        state.networkName = 'invalid';
+      }
+    }
   },
   setBlockDetails(state, payload) {
     state.blockNumber = payload;
