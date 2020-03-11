@@ -15,7 +15,7 @@ const mutations = {
 const actions = {
   getState({ commit, state }) {
     const enableStateToSend = !state.isDaiEnabled;
-    // const mockSucess = Math.round(Math.random());
+    const mockSucess = Math.round(Math.random());
     const mockblockChain = (success) => new Promise((resolve, reject) => {
       setTimeout(() => {
         if (success) {
@@ -25,9 +25,17 @@ const actions = {
         }
       }, 10000);
     });
-    mockblockChain(true).then(() => {
-      commit('setDaiState', enableStateToSend);
-    });
+    commit('setPendingState', true);
+    mockblockChain(mockSucess)
+      .then(() => {
+        commit('setDaiState', enableStateToSend);
+      })
+      .catch((error) => {
+        console.log(error.message);
+      })
+      .finally(() => {
+        commit('setPendingState', false);
+      });
   },
 };
 
