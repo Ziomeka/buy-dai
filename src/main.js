@@ -6,6 +6,7 @@ import './registerServiceWorker';
 import router from './router';
 import vuetify from './plugins/vuetify';
 import store from './store';
+import blockchainBasicDataFactory from './api/blockchainBasicData';
 
 function initVue(web3instance, portisInstance) {
   Vue.config.productionTip = false;
@@ -17,6 +18,8 @@ function initVue(web3instance, portisInstance) {
     submitter: undefined,
   };
 
+  Vue.prototype.$blockchainBasicData = blockchainBasicDataFactory(web3instance, store);
+
   new Vue({
     router,
     vuetify,
@@ -25,13 +28,10 @@ function initVue(web3instance, portisInstance) {
   }).$mount('#app');
 }
 
-let portis;
-let web3;
-
 // eslint-disable-next-line no-undef
 if (!ethereum) {
-  portis = new Portis('ba1a2134-2bbe-441c-b856-5e8d13ebb80a', 'kovan');
-  web3 = new Web3(portis.provider);
+  const portis = new Portis('ba1a2134-2bbe-441c-b856-5e8d13ebb80a', 'kovan', { gasRelay: true });
+  const web3 = new Web3(portis.provider);
   portis.isLoggedIn().then(({ result }) => {
     if (result === false) {
       portis.showPortis().then(() => {
@@ -41,9 +41,10 @@ if (!ethereum) {
     }
   });
 } else {
-  portis = undefined;
+  const portis = undefined;
   // eslint-disable-next-line no-undef
   ethereum.enable().then(() => {
+    // eslint-disable-next-line no-undef
     initVue(web3, portis);
   });
 }
