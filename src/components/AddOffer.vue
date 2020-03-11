@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-btn 
+    <v-btn
       color="primary"
       :disabled="isDisabled" 
       @click.stop="dialog = true">
@@ -27,7 +27,7 @@
           >
             Cancel
           </v-btn>
-          <v-btn 
+          <v-btn
             color="green darken-1"
             text
           >
