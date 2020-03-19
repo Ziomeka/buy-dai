@@ -6,7 +6,6 @@
       @change="changeState"
       >
     </v-switch>
-    {{userType}}
   </div>
 </template>
 
@@ -16,7 +15,7 @@ import { mapState, mapMutations } from 'vuex';
 export default {
   name: 'ToggleUserType',
   data: () => ({
-    isResident: false,
+    isResident: null,
   }),
   computed: {
     ...mapState('blockchainUser', ['userType']),
@@ -33,6 +32,9 @@ export default {
         this.setUserType('traveler');
       }
     },
+  },
+  mounted() {
+    this.isResident = (this.userType === 'resident');
   },
 };
 </script>
