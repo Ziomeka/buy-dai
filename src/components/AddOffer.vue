@@ -2,13 +2,13 @@
   <div>
     <v-btn
       color="primary"
-      :disabled="isDisabled" 
+      :disabled="isDisabled"
       @click.stop="dialog = true">
       Proceed
     </v-btn>
     <v-dialog v-model="dialog" max-width="300">
       <v-card>
-        <v-card-title 
+        <v-card-title
           class="headline"
         >
           Creating offer
