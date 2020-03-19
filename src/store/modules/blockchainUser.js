@@ -1,6 +1,7 @@
 const data = {
   isDaiEnabled: false,
   isEnablingPending: false,
+  userType: 'traveler',
 };
 
 const mutations = {
@@ -9,6 +10,9 @@ const mutations = {
   },
   setPendingState(state, payload) {
     state.isEnablingPending = payload;
+  },
+  setUserType(state, payload) {
+    state.userType = payload;
   },
 };
 
