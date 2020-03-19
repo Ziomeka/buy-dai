@@ -11,7 +11,7 @@
       <v-card>
         <v-card-title class="headline">Creating offer</v-card-title>
         <v-card-text>
-          You are going to create offer to {{transactionType}}
+          You are going to create offer to change
           {{ transactionData.dai}} DAI for {{ transactionData.dolars}} dollars.
         </v-card-text>
         <v-card-actions>
@@ -45,7 +45,6 @@ export default {
     };
   },
   props: {
-    transactionType: String,
     transactionData: Object,
     isDisabled: Boolean,
   },
