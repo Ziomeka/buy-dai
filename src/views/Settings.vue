@@ -1,16 +1,16 @@
 <template>
   <div>
     <h1>This is page with settings</h1>
-    {{blockchainUser.isDaiEnabled}}
+    <toggle-dai-enable/>
   </div>
 </template>
 <script>
-import { mapState } from 'vuex';
+import ToggleDaiEnable from '@/components/ToggleDaiEnable.vue';
 
 export default {
   name: 'Settings',
-  computed: {
-    ...mapState(['blockchainUser']),
+  components: {
+    ToggleDaiEnable,
   },
 };
 </script>
