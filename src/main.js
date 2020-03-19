@@ -28,9 +28,9 @@ function initVue(web3instance, portisInstance) {
 let portis;
 let web3;
 
-// eslint-disable-next-line no-undef
-if (!ethereum) {
-  portis = new Portis('ba1a2134-2bbe-441c-b856-5e8d13ebb80a', 'kovan');
+// eslint-disable-next-line dot-notation
+if (!window['ethereum']) {
+  portis = new Portis('9810d141-46e8-49f2-850f-bfe176146ba8', 'kovan');
   web3 = new Web3(portis.provider);
   portis.isLoggedIn().then(({ result }) => {
     if (result === false) {
@@ -38,6 +38,9 @@ if (!ethereum) {
         portis.changeNetwork('kovan');
         initVue(web3, portis);
       });
+    } else {
+      portis.changeNetwork('kovan');
+      initVue(web3, portis);
     }
   });
 } else {
