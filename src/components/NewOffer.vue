@@ -6,15 +6,18 @@
       <v-form class="pa-5" v-model="valid">
         <v-autocomplete
           label="Choose airport"
-          no-data-text="Aiport not found"
-          :items="items"
+          :items="airports"
           item-text="name"
           item-value="code"
+          v-model="selectedAirport"
+          :search-input.sync="searchAirports"
+          :loading="aiportsLoading"
           return-object
-          v-model="airport"
-          :search-input.sync="search"
+          no-filter
+          clearable
+          hide-no-data
         ></v-autocomplete>
-        {{airport.name}}
+        {{selectedAirport}}
         <v-text-field
           v-model="dai"
           label="Amount of DAI you want to change"
@@ -53,27 +56,36 @@ export default {
     valid: false,
     dai: null,
     dolars: null,
-    airport: {},
-    items: [
-      {
-        id: 1,
-        name: 'dupa',
-        code: 'XYZ',
-        currency: 'dolar',
-      },
-      {
-        id: 2,
-        name: 'kupka',
-        code: 'ABC',
-        currency: 'euro',
-      },
-    ],
-    search: null,
+    airports: [],
+    aiportsLoading: false,
+    searchAirports: null,
+    selectedAirport: {},
   }),
   watch: {
-    search: _.debounce((val) => {
-      console.log(val);
+    searchAirports: _.debounce(function (query) {
+      if (query && query.length > 2) {
+        this.getAirports(query);
+      } else this.airports = [];
     }, 1000),
+  },
+  methods: {
+    getAirports(query) {
+      const url = `https://us-central1-daimarket.cloudfunctions.net/getAirports?q=${query}`;
+      this.aiportsLoading = true;
+      fetch(url, { method: 'GET', mode: 'cors' })
+        .then((response) => {
+          response.json()
+            .then((data) => {
+              this.airports = data;
+            });
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+        .finally(() => {
+          this.aiportsLoading = false;
+        });
+    },
   },
 };
 </script>
