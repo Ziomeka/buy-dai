@@ -12,6 +12,7 @@
           item-value="code"
           return-object
           v-model="airport"
+          :search-input.sync="search"
         ></v-autocomplete>
         {{airport.name}}
         <v-text-field
@@ -36,6 +37,7 @@
 </template>
 
 <script>
+import _ from 'lodash';
 import AddOffer from '@/components/AddOffer.vue';
 
 export default {
@@ -66,6 +68,12 @@ export default {
         currency: 'euro',
       },
     ],
+    search: null,
   }),
+  watch: {
+    search: _.debounce((val) => {
+      console.log(val);
+    }, 1000),
+  },
 };
 </script>
