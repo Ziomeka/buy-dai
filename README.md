@@ -1,5 +1,7 @@
 # buy-dai
 
+Due to dependency on web3 and @portis/web3 suggested development environment is Linux, windows is not supported
+
 ## Project setup
 ```
 npm install
