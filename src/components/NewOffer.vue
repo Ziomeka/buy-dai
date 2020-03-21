@@ -54,14 +54,14 @@
         </v-card-text>
         <v-text-field
           v-model="targetCurrencyAmount"
-          label="Amount of dolars you want to recive"
+          :label="targetCurrencyLabel"
           type="number"
           :disabled="!isAirportSelected"
           :rules="rulesForAmounts"
           :error-messages="aiportErrorMassege"
         />
         <v-card-text>
-          Commision: {{commision}}
+          Commision: {{commision}} %
         </v-card-text>
         <add-offer class="mt-5"
           :transactionData="transactionData"
@@ -87,7 +87,7 @@ export default {
       (value) => value > 0 || 'Must be positive',
     ],
     valid: false,
-    daiAmount: null,
+    daiAmount: 100,
     targetCurrencyAmount: null,
     sugestedPrice: null,
     sugestionLoading: false,
@@ -108,10 +108,14 @@ export default {
     },
     commision() {
       if (this.sugestedPrice) {
-        return ((this.sugestedPrice.value - this.targetCurrencyAmount)
+        return Math.floor(((this.sugestedPrice.value - this.targetCurrencyAmount) * 100)
           / this.sugestedPrice.value).toFixed(2);
       }
       return null;
+    },
+    targetCurrencyLabel() {
+      const currency = this.selectedAirport ? this.selectedAirport.currency : 'USD';
+      return `Amount of ${currency} you want to recive`;
     },
     transactionData() {
       if (this.selectedAirport) {
@@ -127,6 +131,10 @@ export default {
     },
   },
   watch: {
+    // eslint-disable-next-line object-shorthand
+    selectedAirport: function () {
+      this.getPriceSugestion(this.daiAmount, this.selectedAirport.currency);
+    },
     searchAirports: _.debounce(function (query) {
       if (query && query.length > 2) {
         this.getAirports(query);
