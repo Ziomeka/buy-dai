@@ -14,6 +14,9 @@ const actions = {
   setBlockNumber({ commit }) {
     commit('setBlockNumber', true);
   },
+  updateAccountInfo({ commit, state},w3){
+
+  }
 };
 
 export default {

@@ -36,17 +36,17 @@ if (!window['ethereum']) {
     if (result === false) {
       portis.showPortis().then(() => {
         portis.changeNetwork('kovan');
-        initVue(web3, portis);
+        initVue(web3, portis, store);
       });
     } else {
       portis.changeNetwork('kovan');
-      initVue(web3, portis);
+      initVue(web3, portis, store);
     }
   });
 } else {
   portis = undefined;
   // eslint-disable-next-line no-undef
   ethereum.enable().then(() => {
-    initVue(web3, portis);
+    initVue(web3, portis, store);
   });
 }
