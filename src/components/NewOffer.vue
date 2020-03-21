@@ -64,7 +64,7 @@
           Commision: {{commision}}
         </v-card-text>
         <add-offer class="mt-5"
-          :transactionData="{daiAmount, targetCurrencyAmount}"
+          :transactionData="transactionData"
           :isDisabled = !valid
         />
       </v-form>
@@ -114,14 +114,16 @@ export default {
       return null;
     },
     transactionData() {
-      return {
-        airportName: this.selectedAirport.name,
-        aiportCode: this.selectedAirport.code,
-        targetCurrecy: this.selectedAirport.currency,
-        daiAmount: this.daiAmount,
-        price: this.targetCurrencyAmount,
-        commision: this.commision,
-      };
+      if (this.selectedAirport) {
+        return {
+          airportName: this.selectedAirport.name,
+          airportCode: this.selectedAirport.code,
+          targetCurrecy: this.selectedAirport.currency,
+          daiAmount: this.daiAmount,
+          price: this.targetCurrencyAmount,
+          commision: this.commision,
+        };
+      } return {};
     },
   },
   watch: {

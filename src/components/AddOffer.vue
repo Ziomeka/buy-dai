@@ -9,10 +9,12 @@
     </v-btn>
     <v-dialog v-model="dialog" max-width="300">
       <v-card>
-        <v-card-title class="headline">Creating offer</v-card-title>
+        <v-card-title class="headline">Transaction details:</v-card-title>
         <v-card-text>
-          You are going to create offer to change
-          {{ transactionData.dai}} DAI for {{ transactionData.dolars}} dollars.
+          Airport: {{transactionData.airportName}} ({{transactionData.airportCode}})<br/>
+          DAI: {{transactionData.daiAmount}}<br/>
+          Price: {{transactionData.price}} {{transactionData.targetCurrecy}}<br/>
+          Commision: {{transactionData.commision}}
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
