@@ -11,44 +11,20 @@ const cors = require('cors');
 const admin = require("firebase-admin");
 const addOfferFactory = require("./operations/addOfferFactory");
 const externalApiReadsFactory = require("./operations/externalApiReadsFactory");
+const generalBlockchainFactory = require("./operations/generalBlockchainFactory");
+const dbEventsFactory = require("./operations/dbEvents");
+
 
 admin.initializeApp();
 
         // Get a database reference to our blog
-var dbA = admin.database();
-var db = dbA.ref("/");
+const dbA = admin.database();
+const db = dbA.ref("/");
 
-exports.getBalance = functions.https.onRequest((request, response)=>{
-
-    const account = request.query.account;
-
-    return new Promise((resolve)=>{
-
-      eth.getBalance(account).then((data)=>{
-        response.send(data);
-        resolve(data);
-      });
-
-    });
-
-});
+const readBlockNumber =  generalBlockchainFactory.create(functions, eth, db, cors).getBlockNumber;
 
 
-exports.getBlockNumber =  functions
-
-  .runWith({ memory: '1GB', timeoutSeconds: 60 })
-  .https.onRequest((request, response)=>{
-
-    return new Promise((resolve)=>{
-
-      eth.getBlockNumber().then((data)=>{
-        response.send(data.toString());
-        resolve(data);
-      });
-
-    });
-
-});
+exports.getBalance = generalBlockchainFactory.create(functions, eth, db, cors).getBalance;
 
 
 exports.getRate = externalApiReadsFactory.create(functions, rapid, cors).getRate;
@@ -79,24 +55,21 @@ exports.addOffer =  addOfferFactory.create(functions, db, eth, cors);
 exports.handlerOnNewSignature = functions.database.ref('{account}/toSign/{id}/signature').onCreate((snap,ctx)=>{
   var signature = snap.val();
   console.log("signature");
-  db.ref(`/${ctx.params.account}/toSign/${ctx.params.id}`).once('value').then(function(snapshot) {
-    var rec = snapshot.val();
+  return new Promise((res,rej)=>{
+    db.ref(`/${ctx.params.account}/toSign/${ctx.params.id}`).once('value').then(function(snapshot) {
+      var rec = snapshot.val();
 
-    console.log("signature rec", rec);
-    var sig = eth.splitSig(signature);
+      console.log("signature rec", rec);
+      var sig = eth.splitSig(signature);
 
-    eth.sendTx(rec.data, rec.nonce, rec.to, sig.v, sig.r, sig.s).then((x)=>{
-      console.log("Tx send");
+      eth.sendTx(rec.data, rec.nonce, rec.to, sig.v, sig.r, sig.s).then((x)=>{
+        console.log("Tx send");
+      });
     });
-  });
-  return true;
+    res(true);
+  })
 });
 
+exports.handleAnyChange = dbEventsFactory.create(functions, db, eth).handleAnyChange;
 
-
-exports.getPendingSignatures = functions
-.runWith({ memory: '1GB', timeoutSeconds: 60 })
-.https.onRequest((request, response) => {
-  const addr = request.query.account;
-
-});
+exports.scanFormerEvents = dbEventsFactory.create(functions, db, eth).scanFormerEvents;

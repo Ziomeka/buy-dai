@@ -8,7 +8,7 @@ var marketAbi = require('./abi/Market').abi;
 var apiKey = '770b57737fc2496f8dc603dd6b26c4ad';
 var web3 = new Web3(new Web3.providers.HttpProvider('https://kovan.infura.io/v3/' + apiKey));
 
-const marketAdr = "0x1944B2CB6f36C8455e1BbC7C912E8668Ef9E1A28";
+const marketAdr = "0xD6Ea4AAFc8d7044E24ebcfCc9d11e6C62fFC4e55";
 
 var token = new web3.eth.Contract(abi.token, "0xa2e9a6ed3835746aadbad195d32d6442b2d7335a");
 var market =  new web3.eth.Contract(marketAbi, marketAdr);
@@ -40,17 +40,17 @@ function addOffer(sourceAmount,destAmount,currency,account){
   });
 }
 
-function getAllOffers(airport){
-
-}
-
-function getMyOffers(acc){
-
-}
-
 function sendTx(data, nonce, to, v, r, s){
   market.methods.relayCall(data, nonce, v, r, s).send({
     to:to
+  });
+}
+
+function getAllEvents(from, to){
+
+  return market.events.allEvents({
+    fromBlock:from,
+    toBlock:to,
   });
 }
 
@@ -63,10 +63,7 @@ exports.splitSig = function (sing){
 }
 
 exports.sendTx = sendTx;
-
 exports.getBalance = getBalance;
 exports.getBlockNumber = getBlockNumber;
-
-exports.getAllOffers = getAllOffers;
-exports.getMyOffers = getMyOffers;
 exports.addOffer = addOffer;
+exports.getAllEvents = getAllEvents;
