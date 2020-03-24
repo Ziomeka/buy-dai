@@ -2,6 +2,7 @@ const data = {
   isDaiEnabled: false,
   isEnablingPending: false,
   userType: 'traveler',
+  airport: {},
 };
 
 const mutations = {
@@ -13,6 +14,9 @@ const mutations = {
   },
   setUserType(state, payload) {
     state.userType = payload;
+  },
+  setAirport(state, payload) {
+    state.airport = payload;
   },
 };
 
