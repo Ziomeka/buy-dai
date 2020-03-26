@@ -38,18 +38,26 @@ function initOrUpdateVue(portisWeb3, portisLogged, portisInstance) {
     return rec.web3Portis;
   };
 
-  if (ethereum && portisLogged === false) {
-    ethereum.enable().then(() => {
-      rec.web3Inject = web3;
-    });
+  function initBlockchainData() {
+    if (!Vue.prototype.$blockchainBasicData) {
+      Vue.prototype.$blockchainBasicData = blockchainBasicDataFactory(
+        Vue.prototype.$blockchain,
+        store,
+      );
+    }
   }
 
-  if (!Vue.prototype.$blockchainBasicData) {
-    Vue.prototype.$blockchainBasicData = blockchainBasicDataFactory(
-      Vue.prototype.$blockchain,
-      store,
-    );
+  const isEthereum = !(typeof ethereum === 'undefined');
+
+  if (isEthereum && portisLogged === false) {
+    ethereum.enable().then(() => {
+      rec.web3Inject = web3;
+      initBlockchainData();
+    });
+  } else {
+    initBlockchainData();
   }
+
 
   if (!initialized) {
     new Vue({

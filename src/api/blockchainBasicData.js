@@ -1,3 +1,4 @@
+/* eslint-disable */
 function factory(rec, store) {
   let latestBlockNumber = 0;
   let latestBlockHash = 0;
@@ -8,11 +9,19 @@ function factory(rec, store) {
     if (!web3) return;
     if (!web3.version.toString().startsWith('1.')) {
       web3.version.getNetwork((err, res) => {
-        store.commit('networkStats/setNetwork', res);
+        
+        if (store.state.networkStats.networkName !== res) {
+          store.commit('networkStats/setNetwork', res);
+        }
+      
       });
     } else {
-      web3.eth.net.getNetworkType().then((res) => {
-        store.commit('networkStats/setNetwork', res);
+      web3.eth.net.getNetworkType().then((err,res) => {
+        
+        if (store.state.networkStats.networkName !== res) {
+          store.commit('networkStats/setNetwork', res);
+        }
+        
       });
     }
   }
@@ -20,6 +29,9 @@ function factory(rec, store) {
     const web3 = rec.getWeb3();
     if (!web3) return;
     web3.eth.getBlockNumber((err, res) => {
+      if (err) {
+        console.log(err);
+      }
       if (latestBlockNumber !== res) {
         web3.eth.getBlock(res, (e, r) => {
           if (!e && r && r.hash !== latestBlockHash) {
@@ -31,10 +43,9 @@ function factory(rec, store) {
       latestBlockNumber = res;
     });
   }
-  setInterval(() => {
-    getLatestBlock();
-    fetchNetwork();
-  }, 1000);
+
+  getLatestBlock();
+  fetchNetwork();
 
   return {
     fetchNetwork,
