@@ -6,44 +6,82 @@ import './registerServiceWorker';
 import router from './router';
 import vuetify from './plugins/vuetify';
 import store from './store';
+import blockchainBasicDataFactory from './api/blockchainBasicData';
+/* global web3 */
+/* global ethereum */
 
-function initVue(web3instance, portisInstance) {
+let initialized = false;
+
+function initOrUpdateVue(portisWeb3, portisLogged, portisInstance) {
+  let rec;
   Vue.config.productionTip = false;
 
-  Vue.prototype.$blockchain = {
-    web3: web3instance,
-    portis: portisInstance,
-    reader: undefined,
-    submitter: undefined,
+  if (Vue.prototype.$blockchain) {
+    rec = Vue.prototype.$blockchain;
+  } else {
+    rec = {
+      web3Portis: portisWeb3,
+      web3Inject: undefined,
+      portis: portisInstance,
+      reader: undefined,
+      submitter: undefined,
+    };
+    Vue.prototype.$blockchain = rec;
+  }
+
+  Vue.prototype.$blockchain.getWeb3 = function () {
+    if (!portisLogged && rec.web3Inject) {
+      console.log('Web3 injected');
+      return rec.web3Inject;
+    }
+    console.log('Web3 Portis');
+    return rec.web3Portis;
   };
 
-  new Vue({
-    router,
-    vuetify,
-    store,
-    render: (h) => h(App),
-  }).$mount('#app');
+  if (ethereum && portisLogged === false) {
+    ethereum.enable().then(() => {
+      rec.web3Inject = web3;
+    });
+  }
+
+  if (!Vue.prototype.$blockchainBasicData) {
+    Vue.prototype.$blockchainBasicData = blockchainBasicDataFactory(
+      Vue.prototype.$blockchain,
+      store,
+    );
+  }
+
+  if (!initialized) {
+    new Vue({
+      router,
+      vuetify,
+      store,
+      render: (h) => h(App),
+    }).$mount('#app');
+    initialized = true;
+  }
 }
 
-let portis;
-let web3;
+const portis = new Portis('ba1a2134-2bbe-441c-b856-5e8d13ebb80a', 'kovan', { gasRelay: true });
+const web3Portis = new Web3(portis.provider);
 
-// eslint-disable-next-line no-undef
-if (!ethereum) {
-  portis = new Portis('ba1a2134-2bbe-441c-b856-5e8d13ebb80a', 'kovan');
-  web3 = new Web3(portis.provider);
-  portis.isLoggedIn().then(({ result }) => {
-    if (result === false) {
-      portis.showPortis().then(() => {
-        portis.changeNetwork('kovan');
-        initVue(web3, portis);
-      });
-    }
-  });
-} else {
-  portis = undefined;
-  // eslint-disable-next-line no-undef
-  ethereum.enable().then(() => {
-    initVue(web3, portis);
-  });
-}
+portis.isLoggedIn().then(({ result }) => {
+  if (result === false) {
+    portis.showPortis().then(() => {
+      portis.changeNetwork('kovan');
+    });
+    initOrUpdateVue(web3Portis, false, portis);
+  } else {
+    initOrUpdateVue(web3Portis, true, portis);
+  }
+});
+portis.onLogin((walletAddress) => {
+  store.commit('networkStats/setWalletAddress', walletAddress);
+  initOrUpdateVue(web3Portis, true, portis);
+  console.log('Portis onLogin');
+});
+portis.onLogout(() => {
+  store.commit('networkStats/setWalletAddress', undefined);
+  initOrUpdateVue(web3Portis, false, portis);
+  console.log('Portis onLogout');
+});

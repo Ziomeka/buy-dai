@@ -47,7 +47,6 @@ export default {
       dialog: false,
     };
   },
-  created() {},
   props: {
     transactionType: String,
     transactionData: Object,
