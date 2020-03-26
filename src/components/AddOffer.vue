@@ -8,15 +8,14 @@
     </v-btn>
     <v-dialog v-model="dialog" max-width="300">
       <v-card>
-        <v-card-title
-          class="headline"
-        >
-          Creating offer
-        </v-card-title>
+        <v-card-title class="headline">Transaction details:</v-card-title>
         <v-card-text>
-          You are going to create offer to {{ transactionType }}
-          {{ transactionData.dai }} DAI for
-          {{ transactionData.dolars }} dollars.
+          Airport: {{transactionData.airportName}} ({{transactionData.airportCode}})<br/>
+          DAI Used: {{transactionData.daiAmount}} DAI<br/>
+          Cash Earned: {{transactionData.price}} {{transactionData.targetCurrecy}}<br/>
+          Commision: {{transactionData.commision}} %<br/>
+          Refundable deposit: {{transactionData.daiAmount}} DAI<br/>
+          Total DAI needed : {{transactionData.daiAmount * 2}} DAI
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -48,7 +47,6 @@ export default {
     };
   },
   props: {
-    transactionType: String,
     transactionData: Object,
     isDisabled: Boolean,
   },

@@ -7,7 +7,7 @@
     >
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-toolbar-title>
-        Buy DAI
+        DAI in flight (as {{userType}})
       </v-toolbar-title>
       <v-spacer />
       <toggle-wallet />
@@ -34,6 +34,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import ToggleWallet from '@/components/ToggleWallet.vue';
 
 export default {
@@ -44,11 +45,13 @@ export default {
   data: () => ({
     drawer: null,
     links: [
-      { text: 'New offer', route: '/' },
-      { text: 'Browse offers', route: '/AllOffers' },
-      { text: 'My offers', route: '/MyOffers' },
+      { text: 'Home', route: '/' },
+      { text: 'My transactions', route: '/MyOffers' },
       { text: 'Settings', route: '/Settings' },
     ],
   }),
+  computed: {
+    ...mapState('blockchainUser', ['userType']),
+  },
 };
 </script>
