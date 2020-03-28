@@ -3,7 +3,6 @@ const functions = require('firebase-functions');
 // // Create and Deploy Your First Cloud Functions
 // // https://firebase.google.com/docs/functions/write-firebase-functions
 //
-const unirest = require('unirest');
 
 const rapid = require('./rapidApiQueries');
 const eth = require('./ethApi');
