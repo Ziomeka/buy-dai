@@ -55,6 +55,12 @@ const actions = {
     }
     console.log('readEvents', old, payload.new);
   },
+  updateAccountInfo({ commit }, w3) {
+    w3.eth.getAccounts((e, acc) => {
+      console.log('Acc found', acc[0]);
+      commit('setAccount', acc[0]);
+    });
+  },
 };
 
 export default {

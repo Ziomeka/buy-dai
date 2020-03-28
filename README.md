@@ -1,8 +1,16 @@
 # buy-dai
 
-Due to dependency on web3 and @portis/web3 suggested development environment is Linux, windows is not supported
+Due to dependency on web3 and @portis/web3 suggested development environment is Linux, windows is not supported.
 
 ## Project setup
+```
+chmod +x setup.sh 
+```
+
+```
+./setup.sh
+```
+
 ```
 npm install
 ```
@@ -12,14 +20,20 @@ npm install
 npm run serve
 ```
 
+### Lints and fixes files
+```
+npm run lint
+```
+
 ### Compiles and minifies for production
 ```
 npm run build
 ```
 
-### Lints and fixes files
+
+### Install firebase functions and deployment
 ```
-npm run lint
+firebase deploy
 ```
 
 ### Customize configuration
