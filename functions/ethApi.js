@@ -47,11 +47,18 @@ function sendTx(data, nonce, to, v, r, s){
 }
 
 function getAllEvents(from, to){
-
-  return market.events.allEvents({
-    fromBlock:from,
-    toBlock:to,
-  });
+  return new Promise((res, rej) => {
+    let events = market.events.allEvents({
+      fromBlock:from,
+      toBlock:to,
+    }, (err, data) =>{
+      if(err){
+        res(data);
+      }else{
+        rej(err);
+      }
+    });
+  })
 }
 
 exports.splitSig = function (sing){

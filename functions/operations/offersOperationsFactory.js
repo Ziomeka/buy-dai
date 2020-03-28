@@ -1,5 +1,26 @@
-exports.create = function(functions,db,eth,cors)
-{
+function getMyOffersImpl(functions,db,eth,cors){
+  return functions
+  .runWith({ memory: '512MB', timeoutSeconds: 60 })
+  .https.onRequest((request, response)=>{
+
+    const account = request.query.account;
+
+    return cors()(request, response, () => {
+
+      return new Promise((resolve,reject)=>{
+        
+        db.child(account).child("myOffers").once("value").then((data)=>{
+          console.log(data);
+          resolve(data);
+        });
+
+      });
+
+    });
+  });
+}
+
+function addOfferImpl(functions,db,eth,cors){
   return functions
   .runWith({ memory: '512MB', timeoutSeconds: 60 })
   .https.onRequest((request, response)=>{
@@ -32,4 +53,16 @@ exports.create = function(functions,db,eth,cors)
 
     });
   });
+}
+
+exports.create = function(functions,db,eth,cors)
+{
+  const getMyOffers = getMyOffersImpl(functions, db, et, cors);
+  const addOffer = addOfferImpl(functions, db, et, cors);
+
+  return {
+    addOffer,
+    getMyOffers,
+    getAirportsOffers
+  }
 }

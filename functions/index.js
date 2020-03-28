@@ -9,7 +9,7 @@ const rapid = require('./rapidApiQueries');
 const eth = require('./ethApi');
 const cors = require('cors');
 const admin = require("firebase-admin");
-const addOfferFactory = require("./operations/addOfferFactory");
+const offersOperationsFactory = require("./operations/offersOperationsFactory");
 const externalApiReadsFactory = require("./operations/externalApiReadsFactory");
 const generalBlockchainFactory = require("./operations/generalBlockchainFactory");
 const dbEventsFactory = require("./operations/dbEvents");
@@ -31,9 +31,11 @@ exports.getRate = externalApiReadsFactory.create(functions, rapid, cors).getRate
 
 exports.getAirports = externalApiReadsFactory.create(functions, rapid, cors).getAirports;
 
-function sendTransaction(firebaseTxKey){
+exports.getAirprtOffers = offersOperationsFactory.create(functions, db, eth, cors).getAirprtOffers;
 
-}
+exports.getMyOffers = offersOperationsFactory.create(functions, db, eth, cors).getMyOffers;
+
+exports.addOffer =  offersOperationsFactory.create(functions, db, eth, cors).addOffer;
 
 exports.enableDAI =   functions
 
@@ -50,7 +52,6 @@ exports.enableDAI =   functions
       //build relayCall for myPermits signatures
   });
 
-exports.addOffer =  addOfferFactory.create(functions, db, eth, cors);
 
 exports.handlerOnNewSignature = functions.database.ref('{account}/toSign/{id}/signature').onCreate((snap,ctx)=>{
   var signature = snap.val();
