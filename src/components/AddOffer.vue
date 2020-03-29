@@ -31,6 +31,8 @@
           <v-btn
             color="green darken-1"
             text
+            @click="addOffer"
+            :loading="isAddingPending"
           >
             Create
           </v-btn>
@@ -47,11 +49,40 @@ export default {
   data() {
     return {
       dialog: false,
+      isAddingPending: false,
     };
   },
   props: {
     transactionData: Object,
     isDisabled: Boolean,
+  },
+  methods: {
+    addOffer() {
+      const url = 'https://us-central1-daimarket.cloudfunctions.net/addOffer';
+      const dataToSend = {
+        sourceAmount: this.transactionData.daiAmount,
+        destAmount: this.transactionData.price,
+        currency: this.transactionData.targetCurrecy,
+        airport: this.transactionData.airportCode,
+        publicKey: '0x56947aC048452f75A64e2411CA140336cF939f7D',
+        fno: this.transactionData.flightNumber,
+      };
+      this.isAddingPending = true;
+      fetch(url, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(dataToSend),
+      })
+        .then(() => {
+          this.$emit('added');
+          window.alert('Sucess');
+        })
+        .finally(() => {
+          this.dialog = false;
+          this.isAddingPending = false;
+        });
+    },
   },
 };
 </script>

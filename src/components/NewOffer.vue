@@ -3,7 +3,7 @@
     <h1>This is page with new offer</h1>
     <v-card max-width="600" class="mx-auto">
       <v-card-title class="headline">Creating offer</v-card-title>
-      <v-form class="pa-5" v-model="valid">
+      <v-form class="pa-5" v-model="valid" ref="form">
         <v-autocomplete
           label="Destination airport"
           :items="airports"
@@ -73,6 +73,7 @@
         <add-offer class="mt-5"
           :transactionData="transactionData"
           :isDisabled = !valid
+          @added="resetForm"
         />
       </v-form>
     </v-card>
@@ -142,7 +143,9 @@ export default {
   watch: {
     // eslint-disable-next-line object-shorthand
     selectedAirport: function () {
-      this.getPriceSugestion(this.daiAmount, this.selectedAirport.currency);
+      if (this.isAirportSelected) {
+        this.getPriceSugestion(this.daiAmount, this.selectedAirport.currency);
+      }
     },
     searchAirports: _.debounce(function (query) {
       if (query && query.length > 2) {
@@ -191,7 +194,13 @@ export default {
         .finally(() => {
           this.sugestionLoading = false;
         });
-      console.log(amount, currency);
+    },
+    resetForm() {
+      this.$refs.form.reset();
+      this.selectedAirport = null;
+      this.searchAirports = '';
+      this.sugestedPrice = null;
+      this.daiAmount = 100;
     },
   },
 };
