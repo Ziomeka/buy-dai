@@ -58,6 +58,7 @@ function initOrUpdateVue(portisWeb3, portisLogged, portisInstance) {
       ethereum.enable().then(() => {
         Vue.prototype.$blockchain.web3Inject = web3;
         initBlockchainData();
+        store.dispatch('networkStats/updateAccountInfo', Vue.prototype.$blockchain.getWeb3());
         res(true);
       }).catch((x) => {
         rej(x);

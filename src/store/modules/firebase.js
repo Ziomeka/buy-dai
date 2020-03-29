@@ -1,4 +1,11 @@
-/* global firebase */
+import * as firebase from 'firebase/app';
+
+// If you enabled Analytics in your project, add the Firebase SDK for Analytics
+import 'firebase/analytics';
+
+// Add the Firebase products that you want to use
+import 'firebase/database';
+
 const firebaseConfig = {
   apiKey: 'AIzaSyBIPnjrxS4rSVd46SaZaC_MnYacSGh1Qp8',
   authDomain: 'daimarket.firebaseapp.com',
@@ -18,21 +25,28 @@ const database = firebase.database();
 
 const data = {
   signatures: [],
+  keys: {},
 };
 
 const actions = {
-  setSignaturesListener({ comit }, acc) {
-    const starCountRef = database.ref(`${acc}\toSign`);
-    starCountRef.on('value', (snapshot) => {
+  setSignaturesListener({ commit }, payload) {
+    const account = payload.toLowerCase();
+    const path = `${account}/toSign`;
+    const toSignRef = database.ref(path);
+    toSignRef.on('child_added', (snapshot) => {
       const newSignature = snapshot.val();
-      console.log('currentSignatures', newSignature);
-      comit('updateSignatures', newSignature);
+      newSignature.key = snapshot.key;
+      if (!data[newSignature.key]) {
+        console.log('new signature', newSignature);
+        commit('updateSignatures', newSignature);
+        data.keys[newSignature.key] = true;
+      }
     });
   },
 };
 
 const mutations = {
-  addSignature(state, val) {
+  updateSignatures(state, val) {
     state.signatures.push(val);
   },
 };

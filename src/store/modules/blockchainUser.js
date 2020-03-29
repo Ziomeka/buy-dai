@@ -3,6 +3,7 @@ const data = {
   isEnablingPending: false,
   userType: 'traveler',
   airport: {},
+  address: '',
 };
 
 const mutations = {
@@ -17,6 +18,9 @@ const mutations = {
   },
   setAirport(state, payload) {
     state.airport = payload;
+  },
+  setAddress(state, payload) {
+    state.address = payload;
   },
 };
 

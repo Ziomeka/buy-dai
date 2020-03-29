@@ -26,7 +26,7 @@ const mutations = {
   setBlockDetails(state, payload) {
     state.blockNumber = payload;
   },
-  setWalletAddress(state, payload) {
+  setUser(state, payload) {
     state.user = payload;
   },
 };
@@ -55,10 +55,14 @@ const actions = {
     }
     console.log('readEvents', old, payload.new);
   },
-  updateAccountInfo({ commit }, w3) {
+  updateAccountInfo({ commit, dispatch }, w3) {
     w3.eth.getAccounts((e, acc) => {
-      console.log('Acc found', acc[0]);
-      commit('setAccount', acc[0]);
+      const currentAccount = (typeof (acc) !== 'undefined' && acc.length > 0) ? acc[0] : 'NOT_SET';
+
+      console.log('Acc found', currentAccount);
+      commit('setUser', currentAccount);
+      commit('blockchainUser/setAddress', currentAccount, { root: true });
+      dispatch('firebase/setSignaturesListener', currentAccount, { root: true });
     });
   },
 };
