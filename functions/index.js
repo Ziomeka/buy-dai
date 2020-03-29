@@ -30,7 +30,7 @@ exports.getRate = externalApiReadsFactory.create(functions, rapid, cors).getRate
 
 exports.getAirports = externalApiReadsFactory.create(functions, rapid, cors).getAirports;
 
-exports.getAirprtOffers = offersOperationsFactory.create(functions, db, eth, cors).getAirprtOffers;
+exports.getAirportsOffers = offersOperationsFactory.create(functions, db, eth, cors).getAirportsOffers;
 
 exports.getMyOffers = offersOperationsFactory.create(functions, db, eth, cors).getMyOffers;
 
@@ -54,12 +54,10 @@ exports.enableDAI =   functions
 
 exports.handlerOnNewSignature = functions.database.ref('{account}/toSign/{id}/signature').onCreate((snap,ctx)=>{
   var signature = snap.val();
-  console.log("signature");
   return new Promise((res,rej)=>{
     db.ref(`/${ctx.params.account}/toSign/${ctx.params.id}`).once('value').then(function(snapshot) {
       var rec = snapshot.val();
 
-      console.log("signature rec", rec);
       var sig = eth.splitSig(signature);
 
       eth.sendTx(rec.data, rec.nonce, rec.to, sig.v, sig.r, sig.s).then((x)=>{
