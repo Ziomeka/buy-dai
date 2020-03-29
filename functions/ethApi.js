@@ -64,6 +64,7 @@ function getAllEvents(from, to){
 }
 
 exports.splitSig = function (signature){
+  signature = signature.substr(2);
   const r = signature.substr(0, 64);
   var s = signature.substr(64, 64);
   var v = signature.substr(128, 2);
