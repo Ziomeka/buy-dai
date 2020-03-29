@@ -22,9 +22,7 @@ const db = dbA.ref("/");
 
 const readBlockNumber =  generalBlockchainFactory.create(functions, eth, db, cors).getBlockNumber;
 
-
 exports.getBalance = generalBlockchainFactory.create(functions, eth, db, cors).getBalance;
-
 
 exports.getRate = externalApiReadsFactory.create(functions, rapid, cors).getRate;
 
@@ -35,6 +33,10 @@ exports.getAirportsOffers = offersOperationsFactory.create(functions, db, eth, c
 exports.getMyOffers = offersOperationsFactory.create(functions, db, eth, cors).getMyOffers;
 
 exports.addOffer =  offersOperationsFactory.create(functions, db, eth, cors).addOffer;
+
+exports.updateSignature =  offersOperationsFactory.create(functions, db, eth, cors).updateSignature;
+
+exports.onSignatureUpdated =
 
 exports.enableDAI =   functions
 

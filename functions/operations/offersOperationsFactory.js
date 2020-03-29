@@ -3,7 +3,7 @@ function getMyOffersImpl(functions,db,eth,cors){
   .runWith({ memory: '512MB', timeoutSeconds: 60 })
   .https.onRequest((request, response)=>{
 
-    const account = request.query.account.toUpperCase();
+    const account = request.query.account.toLowerCase();
 
     return cors()(request, response, () => {
 
@@ -11,6 +11,7 @@ function getMyOffersImpl(functions,db,eth,cors){
         console.log("Out getMyOffersImpl",account);
         db.child(account).child("myOffers").once("value").then((snapshot)=>{
           let data = snapshot.val();
+          console.log("In getMyOffersImpl 1", data);
           let retVal = Object.keys(data).map(x=>{
             let val = data[x];
             if(typeof(val)!=="object"){
@@ -23,8 +24,9 @@ function getMyOffersImpl(functions,db,eth,cors){
           response.send(retVal);
           resolve(retVal);
         }).catch((ex)=>{
+          console.log(ex);
           response.send(500);
-          reject(error);
+          reject(ex);
         });
 
       });
@@ -70,12 +72,17 @@ function addOfferImpl(functions,db,eth,cors){
   .runWith({ memory: '512MB', timeoutSeconds: 60 })
   .https.onRequest((request, response)=>{
 
-    const sourceAmount = request.query.sourceAmount.toLowerCase();
-    const destAmount = request.query.destAmount.toLowerCase();
-    const currency = request.query.currency;
-    const account = request.query.account.toLowerCase();
-    const airport = request.query.airport.toUpperCase();
-    const fno = request.query.fno;
+    if (request.method != "POST") {
+        response.status(405).send("Use POST");
+        return;
+    }
+
+    const sourceAmount = request.body.sourceAmount.toLowerCase();
+    const destAmount = request.body.destAmount.toLowerCase();
+    const currency = request.body.currency;
+    const account = request.body.account.toLowerCase();
+    const airport = request.body.airport.toUpperCase();
+    const fno = request.body.fno;
 
     return cors()(request, response, () => {
 
@@ -107,15 +114,48 @@ function addOfferImpl(functions,db,eth,cors){
   });
 }
 
+
+function updateSignaturesImpl(functions,db,eth,cors){
+  return functions
+  .runWith({ memory: '512MB', timeoutSeconds: 60 })
+  .https.onRequest((request, response)=>{
+
+    const id = request.query.id;
+    const account = request.query.account.toLowerCase();
+    const signature = request.query.signature.toLowerCase();
+
+    return cors()(request, response, () => {
+
+      return new Promise((resolve, reject) => {
+
+        var updates = {};
+        const path = `/${account}/toSign/${id}/signature`;
+        updates[path] = signature;
+        db.update(updates)
+        .then( () => {
+          resolve(true);
+          response.send(200);
+        }).catch( () => {
+          reject(true);
+          response.send(500);
+        });
+      });
+
+    });
+  });
+}
+
 exports.create = function(functions,db,eth,cors)
 {
   const getMyOffers = getMyOffersImpl(functions, db, eth, cors);
   const addOffer = addOfferImpl(functions, db, eth, cors);
   const getAirportsOffers = getAirportsOffersImpl(functions, db, eth, cors);
+  const updateSignature = updateSignaturesImpl(functions, db, eth, cors);
 
   return {
     addOffer,
     getMyOffers,
-    getAirportsOffers
+    getAirportsOffers,
+    updateSignature,
   }
 }

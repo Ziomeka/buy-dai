@@ -40,6 +40,6 @@ exports.create = function(functions, eth, db, cors){
 
   return {
     getBalance:getBalanceImpl,
-    getBlockNumber:getBlockNumberImpl
+    getBlockNumber:getBlockNumberImpl,
   }
 }

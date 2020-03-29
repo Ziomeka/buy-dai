@@ -5,8 +5,9 @@
 var Web3 = require('web3');
 var abi = require('./abi/abi');
 var marketAbi = require('./abi/Market').abi;
+const HDWalletProvider = require('truffle-hdwallet-provider');
 var apiKey = '770b57737fc2496f8dc603dd6b26c4ad';
-var web3 = new Web3(new Web3.providers.HttpProvider('https://kovan.infura.io/v3/' + apiKey));
+var web3 = new Web3(new HDWalletProvider('jar bubble paper swarm reward bird brand floor kick friend what express','https://kovan.infura.io/v3/' + apiKey));
 
 const marketAdr = "0xD6Ea4AAFc8d7044E24ebcfCc9d11e6C62fFC4e55";
 
@@ -61,11 +62,14 @@ function getAllEvents(from, to){
   })
 }
 
-exports.splitSig = function (sing){
+exports.splitSig = function (signature){
+  const r = signature.substr(0, 64);
+  var s = signature.substr(64, 64);
+  var v = signature.substr(128, 2);
   return {
-    v:"",
-    r:"",
-    s:""
+    v:"0x"+v,
+    r:"0x"+r,
+    s:"0x"+s,
   };
 }
 
