@@ -12,6 +12,7 @@
         <v-card-title class="headline">Transaction details:</v-card-title>
         <v-card-text>
           Airport: {{transactionData.airportName}} ({{transactionData.airportCode}})<br/>
+          Flight number: {{transactionData.flightNumber}}<br/>
           DAI Used: {{transactionData.daiAmount}} DAI<br/>
           Cash Earned: {{transactionData.price}} {{transactionData.targetCurrecy}}<br/>
           Commision: {{transactionData.commision}} %<br/>

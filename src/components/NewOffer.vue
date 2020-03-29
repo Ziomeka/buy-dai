@@ -24,6 +24,13 @@
           in {{selectedAirport.currency}}
         </div>
         <v-text-field
+          v-model="flightNumber"
+          label="Flight number"
+          :disabled="!isAirportSelected"
+          maxlength = "20"
+          :error-messages="aiportErrorMassege"
+        />
+        <v-text-field
           v-model="daiAmount"
           label="Amount of DAI you want to change"
           type="number"
@@ -98,6 +105,7 @@ export default {
     rulesForAirports: [
       (value) => !!value || 'Required.',
     ],
+    flightNumber: '',
   }),
   computed: {
     isAirportSelected() {
@@ -122,6 +130,7 @@ export default {
         return {
           airportName: this.selectedAirport.name,
           airportCode: this.selectedAirport.code,
+          flightNumber: this.flightNumber,
           targetCurrecy: this.selectedAirport.currency,
           daiAmount: this.daiAmount,
           price: this.targetCurrencyAmount,
