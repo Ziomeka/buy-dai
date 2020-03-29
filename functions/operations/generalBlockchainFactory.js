@@ -28,7 +28,6 @@ exports.create = function(functions, eth, db, cors){
 
       return cors()(request, response, () => {
         return new Promise((resolve)=>{
-          console.log('getBlockNumberImpl counter', counter);
           eth.getBlockNumber().then((data)=>{
             response.send(data.toString());
             resolve(data);
