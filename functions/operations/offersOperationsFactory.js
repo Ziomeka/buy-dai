@@ -12,14 +12,20 @@ function getMyOffersImpl(functions,db,eth,cors){
         db.child(publicKey).child("myOffers").once("value").then((snapshot)=>{
           let data = snapshot.val();
           console.log("In getMyOffersImpl 1", data);
-          let retVal = Object.keys(data).map(x=>{
-            let val = data[x];
-            if(typeof(val)!=="object"){
-              return undefined;
-            }
-            val.uniqueId = x;
-            return val;
-          }).filter(x=>x !== undefined);
+
+          let retVal = [];
+          if(!data){
+            retVal = [];
+          } else {
+            retVal = Object.keys(data).map(x=>{
+              let val = data[x];
+              if(typeof(val)!=="object"){
+                return undefined;
+              }
+              val.uniqueId = x;
+              return val;
+            }).filter(x=>x !== undefined);
+          }
           console.log("In getMyOffersImpl", retVal);
           response.send(retVal);
           resolve(retVal);
@@ -28,7 +34,6 @@ function getMyOffersImpl(functions,db,eth,cors){
           response.send(500);
           reject(ex);
         });
-
       });
 
     });
