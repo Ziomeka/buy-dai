@@ -3,7 +3,7 @@ function getMyOffersImpl(functions,db,eth,cors){
   .runWith({ memory: '512MB', timeoutSeconds: 60 })
   .https.onRequest((request, response)=>{
 
-    const account = request.query.account;
+    const account = request.query.account.toUpperCase();
 
     return cors()(request, response, () => {
 
@@ -70,11 +70,11 @@ function addOfferImpl(functions,db,eth,cors){
   .runWith({ memory: '512MB', timeoutSeconds: 60 })
   .https.onRequest((request, response)=>{
 
-    const sourceAmount = request.query.sourceAmount;
-    const destAmount = request.query.destAmount;
+    const sourceAmount = request.query.sourceAmount.toLowerCase();
+    const destAmount = request.query.destAmount.toLowerCase();
     const currency = request.query.currency;
-    const account = request.query.account;
-    const airport = request.query.airport;
+    const account = request.query.account.toLowerCase();
+    const airport = request.query.airport.toUpperCase();
     const fno = request.query.fno;
 
     return cors()(request, response, () => {
