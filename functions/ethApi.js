@@ -42,7 +42,8 @@ function addOffer(sourceAmount,destAmount,currency,account){
 }
 
 function sendTx(data, nonce, to, v, r, s){
-  market.methods.relayCall(data, nonce, v, r, s).send({
+  console.log("Prepering send", arguments);
+  return market.methods.relayCall(data, nonce, v, r, s).send({
     to:to
   });
 }

@@ -36,8 +36,6 @@ exports.addOffer =  offersOperationsFactory.create(functions, db, eth, cors).add
 
 exports.updateSignature =  offersOperationsFactory.create(functions, db, eth, cors).updateSignature;
 
-exports.onSignatureUpdated =
-
 exports.enableDAI =   functions
 
   .runWith({ memory: '512MB', timeoutSeconds: 60 })
@@ -57,13 +55,17 @@ exports.enableDAI =   functions
 exports.handlerOnNewSignature = functions.database.ref('{account}/toSign/{id}/signature').onCreate((snap,ctx)=>{
   var signature = snap.val();
   return new Promise((res,rej)=>{
-    db.ref(`/${ctx.params.account}/toSign/${ctx.params.id}`).once('value').then(function(snapshot) {
+    db.child(`/${ctx.params.account}/toSign/${ctx.params.id}`).once('value').then(function(snapshot) {
       var rec = snapshot.val();
+
+        console.log("details fetched ", ctx.params.account, ctx.params.id);
 
       var sig = eth.splitSig(signature);
 
       eth.sendTx(rec.data, rec.nonce, rec.to, sig.v, sig.r, sig.s).then((x)=>{
         console.log("Tx send");
+      }).catch((ex) => {
+        console.log("sendTx failed",ex);
       });
     });
     res(true);
