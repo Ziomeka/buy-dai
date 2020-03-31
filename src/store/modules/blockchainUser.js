@@ -3,6 +3,7 @@ const data = {
   isEnablingPending: false,
   userType: 'traveler',
   airport: {},
+  publicKey: '0x56947aC048452f75A64e2411CA140336cF939f7D',
 };
 
 const mutations = {

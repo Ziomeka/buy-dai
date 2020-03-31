@@ -43,6 +43,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 
 export default {
   name: 'AddOffer',
@@ -56,6 +57,9 @@ export default {
     transactionData: Object,
     isDisabled: Boolean,
   },
+  computed: {
+    ...mapState('blockchainUser', ['publicKey']),
+  },
   methods: {
     addOffer() {
       const url = 'https://us-central1-daimarket.cloudfunctions.net/addOffer';
@@ -64,7 +68,7 @@ export default {
         destAmount: this.transactionData.price,
         currency: this.transactionData.targetCurrecy,
         airport: this.transactionData.airportCode,
-        publicKey: '0x56947aC048452f75A64e2411CA140336cF939f7D',
+        publicKey: this.publicKey,
         fno: this.transactionData.flightNumber,
       };
       this.isAddingPending = true;
