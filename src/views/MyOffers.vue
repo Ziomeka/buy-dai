@@ -1,15 +1,19 @@
 <template>
   <div>
-    <h1>This is page with my offers</h1>
-    {{offers}}
+    <h1>Your offers</h1>
+      <offer v-for="offer in offers" :key="offer.uniqueId" :transactionData="offer"/>
   </div>
 </template>
 
 <script>
 import { mapActions, mapState } from 'vuex';
+import Offer from '@/components/Offer.vue';
 
 export default {
   name: 'MyOffers',
+  components: {
+    Offer,
+  },
   methods: {
     ...mapActions('myOffers', ['getMyOffers']),
   },
