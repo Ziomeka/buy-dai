@@ -26,9 +26,41 @@ function getMyOffersImpl(functions,db,eth,cors){
               return val;
             }).filter(x=>x !== undefined);
           }
-          console.log("In getMyOffersImpl", retVal);
-          response.send(retVal);
-          resolve(retVal);
+
+          const airports = Object.keys(retVal.map(x=>x.airport).reduce((ac,a) => ({...ac,[a]:''}),{}));
+
+
+          let airportData = {};
+
+          let promises = [];
+
+          airports.forEach(x => {
+            var path = `/allAirports/${x}`;
+            console.log("airports.forEach", path,x);
+            promises.push(db.child(path).once("value"));
+          })
+
+          Promise.all(promises).then(values =>{
+            values = values.map(x => x.val() );
+
+            var airportData = {};
+
+            values.forEach(x => {
+              airportData[x.code] = x;
+            })
+
+            console.log("promises", values, airportData);
+
+            retVal = retVal.map(x=>{
+              x.airport = airportData[x.airport];
+              return x;
+            });
+
+
+            response.send(retVal);
+            resolve(retVal);
+          });
+
         }).catch((ex)=>{
           console.log(ex);
           response.send(500);
@@ -67,7 +99,6 @@ function getAirportsOffersImpl(functions,db,eth,cors){
             }).filter(x=>x !== undefined);
           }
 
-          console.log(retVal);
           response.send(retVal);
           resolve(retVal);
 
