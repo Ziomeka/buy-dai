@@ -26,7 +26,7 @@ exports.getBalance = generalBlockchainFactory.create(functions, eth, db, cors).g
 
 exports.getRate = externalApiReadsFactory.create(functions, rapid, cors).getRate;
 
-exports.getAirports = externalApiReadsFactory.create(functions, rapid, cors).getAirports;
+exports.getAirports = externalApiReadsFactory.create(functions, rapid, cors, db).getAirports;
 
 exports.getAirportsOffers = offersOperationsFactory.create(functions, db, eth, cors).getAirportsOffers;
 
@@ -64,11 +64,12 @@ exports.handlerOnNewSignature = functions.database.ref('{account}/toSign/{id}/si
 
       eth.sendTx(rec.data, rec.nonce, rec.to, sig.v, sig.r, sig.s).then((x)=>{
         console.log("Tx send");
+        res(true);
       }).catch((ex) => {
-        console.log("sendTx failed",ex);
+        console.error("sendTx failed", ex);
+        rej(ex);
       });
     });
-    res(true);
   })
 });
 

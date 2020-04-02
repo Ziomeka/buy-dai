@@ -51,7 +51,7 @@ function getAirportsOffersImpl(functions,db,eth,cors){
 
       return new Promise((resolve,reject)=>{
 
-        db.child(`airports/${airport}`).once("value").then((snapshot)=>{
+        db.child(`airportOffers/${airport}`).once("value").then((snapshot)=>{
           let data = snapshot.val();
           let retVal = [];
           if(!data){

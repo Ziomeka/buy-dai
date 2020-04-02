@@ -1,4 +1,5 @@
-exports.create = function(functions, rapid, cors) {
+
+exports.create = function(functions, rapid, cors, db) {
 
   const getRateImpl = functions
     .runWith({ memory: '256MB', timeoutSeconds: 60 })
